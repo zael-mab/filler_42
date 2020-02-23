@@ -30,6 +30,7 @@ typedef struct s_data
     int         **map;
     char        **tab;
     size_t      i;
+    int         l;
 }               t_data;
 
 typedef struct s_cnt
@@ -41,7 +42,7 @@ typedef struct s_cnt
     int         w;
     int         z;
     int         score;
-    char        **cornd;
+    int        **cornd;
     int         cnt;
     int         ind;
     int         tp;

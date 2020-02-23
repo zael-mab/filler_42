@@ -48,7 +48,8 @@ void	get_the_piece(t_data data,t_cnt *cnt)
 	i = -1;
 	// cnt->gama = -1;
 	// cnt->zeta = -1;
-	cnt->cornd = (char **) malloc (sizeof (char *) * cnt->contr);
+	cnt->cornd = (int **) malloc (sizeof (int *) * cnt->contr);
+	//cnt->cornd = NULL;
 	while (++i < cnt->w)
 	{
 		j = -1;
@@ -61,9 +62,11 @@ void	get_the_piece(t_data data,t_cnt *cnt)
 				// cnt->gama = (cnt->gama > j) ? cnt->gama : j;
 				// if (cnt->gama > j)
 				// 	cnt->zeta = (cnt->zeta < i) ? cnt->zeta : i;
-				cnt->cornd[x] = (char*)malloc (sizeof (char) * 2);
+				cnt->cornd[x] = (int*)malloc (sizeof (int) * 3);
+				//cnt->cornd[x] = NULL;
 				cnt->cornd[x][0] = i;
 				cnt->cornd[x][1] = j;
+				cnt->cornd[x][2] = -1;
 				dprintf(data.fdp, "|%d * %d|", cnt->cornd[x][0], cnt->cornd[x][1]);
 				x++;
 			}
@@ -78,11 +81,6 @@ void 	replace_the_piece(t_data *data, t_cnt *cnt)
 {
 	int x;
 	int y;
-	int i;
-	int w;
-	int z;
-	// int res = 0;
-	int score = 0;
 
 	x = -1;
 	while (++x < data->x)
@@ -92,36 +90,65 @@ void 	replace_the_piece(t_data *data, t_cnt *cnt)
 		{
 			if (data->map[x][y] == -1)
 			{
-				i = 0;
-				// while (++i)
-				// {
-					cnt->alpha = abs(cnt->cornd[i][0] - x);
-					cnt->beta = abs(cnt->cornd[i][1] - y);
-					cnt->cornd[i][0] = x;
-					cnt->cornd[i][1] = y;
-					while (i++ < cnt->contr - 1)
-					{
-						w = cnt->cornd[i][0] + cnt->alpha;
-						z = cnt->cornd[i][1] + cnt->beta;
-						if (data->map[w][z] == -1)
-							dprintf (data->fdp,"ops");
-						else
-						{
-							score += data->map[w][z];
-							data->map[w][z] = -2;	
-						}
-						
-					}
-				// }
-				dprintf (data->fdp, "%d * %d | %d | alpha:%d beta:%d score =%d\n", x, y, cnt->contr, cnt->alpha, cnt->beta, score);
+				check(x, y, cnt, data);
+				// dprintf (data->fdp, "%d * %d | %d | alpha:%d beta:%d score =%d\n", x, y, cnt->contr, cnt->alpha, cnt->beta, cnt->score);
 			}
 
 		}
 	}
-	// vs(*data);
 }
 
-// void	check(int x, int y, int alpha, int beta)
-// {
+void	check(int x, int y, t_cnt *cnt, t_data *data)
+{
+	int i;
+	int w;
+	int z;
+	int t1;
+	int t2;
+	int res;
+	int j;
 
-// }
+	j = -1;
+	dprintf (data->fdp,"cntr%d\n",cnt->contr);
+	cnt->score = 0;
+	while (++j < cnt->contr) 
+	{
+		cnt->alpha = cnt->cornd[j][0] - x;
+		cnt->beta = cnt->cornd[j][1] - y;
+		t1 = cnt->cornd[j][0];
+		t2 = cnt->cornd[j][1];
+		cnt->cornd[j][0] = x;
+		cnt->cornd[j][1] = y;
+		cnt->cornd[j][2] = 1;
+		i = -1;
+		res = 0;
+		
+		while (++i < cnt->contr)
+		{
+			if (cnt->cornd[i][2] == -1)
+			{
+				w = cnt->cornd[i][0] - cnt->alpha;
+				z = cnt->cornd[i][1] - cnt->beta;
+				if (data->map[w][z] == -1)
+					ft_putendl_fd("oppeS", data->fdp);
+				else
+				{
+					res += data->map[w][z];
+					// data->map[w][z] = -2;
+					vs(*data);
+				}
+			}
+
+		}
+		cnt->cornd[j][0] = t1;
+		cnt->cornd[j][1] = t2;
+		cnt->cornd[j][2] = -1;
+		dprintf(data->fdp, "res = %d\n", res);
+		if (cnt->score > res || cnt->score == 0)
+		{
+			data->l = j;
+			cnt->score = res;
+		}
+	}
+	dprintf (data->fdp, "\nres = %d | l = %d | score = %d\n", res, data->l, cnt->score);
+}
