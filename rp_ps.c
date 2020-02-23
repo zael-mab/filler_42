@@ -148,7 +148,7 @@ void	check(int x, int y, t_cnt *cnt, t_data *data)
 		{
 			data->l = j;
 			cnt->score = res;
-		}
+		} // have the score & and the token position
 	}
 	dprintf (data->fdp, "\nres = %d | l = %d | score = %d\n", res, data->l, cnt->score);
 }
