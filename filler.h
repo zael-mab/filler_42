@@ -19,34 +19,31 @@
 
 typedef struct s_data
 {
-    int         fdp;
+    int         fdp; // just for debugging  
     int         x;
     int         y;
     int         pnum;
-    char        *str;
     char        pl1;
     char        pl2;
     char        *line;
     int         **map;
     char        **tab;
-    size_t      i;
     int         l;
 }               t_data;
 
-typedef struct s_cnt
+typedef struct  s_cnt
 {
-    int         alpha;
-    int         beta;
     int         gama;
     int         zeta;
+    int         alpha;
+    int         beta;
     int         w;
     int         z;
+    int         **cornd;
     int         score;
-    int        **cornd;
-    int         cnt;
+    int         contr;
     int         ind;
     int         tp;
-    int         contr;
 }               t_cnt;
 
 int		checke_the99(t_data data);

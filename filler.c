@@ -17,23 +17,31 @@ void    louper0(t_data *data, t_cnt *cnt, int y, int x)
     cnt->ind = data->map[x][y] + 1;
     if (x + 1 < data->x && y + 1 < data->y)
     {
-        if (data->map[x + 1][y + 1] == 99)
+        if (data->map[x + 1][y + 1] == 777)
             data->map[x + 1][y + 1] = cnt->ind;
+        if (data->map[x + 1][y + 1] == -1)
+            cnt->ind++;
     }
     if (x + 1 < data->x && y - 1 > -1)
     {
-        if (data->map[x + 1][y - 1] == 99)
+        if (data->map[x + 1][y - 1] == 777)
             data->map[x + 1][y - 1] = cnt->ind;
+        if (data->map[x + 1][y - 1] == -1)
+            cnt->ind++;
     }
     if (x - 1 > -1 && y - 1 > -1)
     {
-        if (data->map[x - 1][y - 1] == 99)
+        if (data->map[x - 1][y - 1] == 777)
             data->map[x - 1][y - 1] = cnt->ind;
+        if (data->map[x - 1][y - 1] == -1)
+            cnt->ind++;
     }
     if (x - 1 > -1 && y + 1 < data->y)
     {
-        if (data->map[x - 1][y + 1] == 99)
+        if (data->map[x - 1][y + 1] == 777)
             data->map[x - 1][y + 1] = cnt->ind;
+        if (data->map[x - 1][y + 1] == -1)
+            cnt->ind++;
     }
 }
 
@@ -41,23 +49,31 @@ void    louper1(t_data *data, t_cnt *cnt, int y, int x)
 {
     if (x + 1 < data->x)
     {
-        if (data->map[x + 1][y] == 99)
+        if (data->map[x + 1][y] == 777)
             data->map[x + 1][y] = cnt->ind;
+        if (data->map[x + 1][y] == -1)
+            cnt->ind++;
     }
     if (x - 1 > -1)
     {
-        if (data->map[x - 1][y] == 99)
+        if (data->map[x - 1][y] == 777)
             data->map[x - 1][y] = cnt->ind;
+        if (data->map[x - 1][y] == -1)
+            cnt->ind++;
     }
     if (y - 1 > -1)
     {
-        if (data->map[x][y - 1] == 99)
+        if (data->map[x][y - 1] == 777)
             data->map[x][y - 1] = cnt->ind;
+        if (data->map[x][y - 1] == -1)
+            cnt->ind++;
     }
     if (y + 1 < data->y)
     {
-        if (data->map[x][y + 1] == 99)
+        if (data->map[x][y + 1] == 777)
             data->map[x][y + 1] = cnt->ind;
+        if (data->map[x][y + 1] == -1)
+            cnt->ind++;
     }
 }
 
@@ -75,6 +91,7 @@ void    f_heat_map(t_data *data, t_cnt *cnt)
             cnt->ind = cnt->tp;
             if (data->map[x][y] == cnt->ind)
             {
+                // ft_putstr_fd ("\nBfcku\n", data->fdp);
                 louper0(data, cnt, y, x);
                 louper1(data, cnt, y, x);
             }
@@ -93,7 +110,7 @@ void	map_looper(t_data *data, t_cnt *cnt)
 		y = -1;
 		while (++y < data->y)
 		{
-			if (data->map[x][y] == cnt->tp || data->map[x][y] == 99)
+			if (data->map[x][y] == cnt->tp || data->map[x][y] == 777)
 			{
 				f_heat_map(data, cnt);
 				cnt->tp++;

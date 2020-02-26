@@ -23,7 +23,7 @@ void	get_the_piece(t_data data,t_cnt *cnt)
 	i = -1;
 	cnt->w = ft_atoi(data.tab[1]); 					//number of lines
 	cnt->z = ft_atoi(data.tab[2]);					//len
-	dprintf (data.fdp, "\nw<%d>:z<%d>\n", cnt->w, cnt->z); // the piece dim
+	// dprintf (data.fdp, "\nw<%d>:z<%d>\n", cnt->w, cnt->z); // the piece dim
 	data.tab = (char **)malloc (sizeof(char *) * cnt->w);
 	cnt->contr = 0;
 	while (++i < cnt->w)
@@ -41,15 +41,12 @@ void	get_the_piece(t_data data,t_cnt *cnt)
 
 //////////////////////////////////////
 
-	dprintf (data.fdp, "contr:[%d]\n", cnt->contr);
+	// dprintf (data.fdp, "contr:[%d]\n", cnt->contr);
 	int x;
 	
 	x = 0;
 	i = -1;
-	// cnt->gama = -1;
-	// cnt->zeta = -1;
 	cnt->cornd = (int **) malloc (sizeof (int *) * cnt->contr);
-	//cnt->cornd = NULL;
 	while (++i < cnt->w)
 	{
 		j = -1;
@@ -63,16 +60,16 @@ void	get_the_piece(t_data data,t_cnt *cnt)
 				// if (cnt->gama > j)
 				// 	cnt->zeta = (cnt->zeta < i) ? cnt->zeta : i;
 				cnt->cornd[x] = (int*)malloc (sizeof (int) * 3);
-				//cnt->cornd[x] = NULL;
 				cnt->cornd[x][0] = i;
 				cnt->cornd[x][1] = j;
 				cnt->cornd[x][2] = -1;
-				dprintf(data.fdp, "|%d * %d|", cnt->cornd[x][0], cnt->cornd[x][1]);
+				// dprintf(data.fdp, "|%d * %d|", cnt->cornd[x][0], cnt->cornd[x][1]);
 				x++;
 			}
 		}
-		dprintf (data.fdp, "\n");
+		// dprintf (data.fdp, "\n");
 	}
+
 	replace_the_piece(&data, cnt);
 }
 
@@ -83,6 +80,7 @@ void 	replace_the_piece(t_data *data, t_cnt *cnt)
 	int y;
 
 	x = -1;
+	cnt->score = 0;
 	while (++x < data->x)
 	{
 		y = -1;
@@ -96,6 +94,11 @@ void 	replace_the_piece(t_data *data, t_cnt *cnt)
 
 		}
 	}
+	ft_putstr_fd ("\nBfcku\n", data->fdp);
+	ft_putnbr(cnt->zeta);
+	ft_putchar(' ');
+	ft_putnbr(cnt->gama);
+	ft_putchar ('\n');
 }
 
 void	check(int x, int y, t_cnt *cnt, t_data *data)
@@ -108,9 +111,8 @@ void	check(int x, int y, t_cnt *cnt, t_data *data)
 	int res;
 	int j;
 
+
 	j = -1;
-	dprintf (data->fdp,"cntr%d\n",cnt->contr);
-	cnt->score = 0;
 	while (++j < cnt->contr) 
 	{
 		cnt->alpha = cnt->cornd[j][0] - x;
@@ -123,19 +125,24 @@ void	check(int x, int y, t_cnt *cnt, t_data *data)
 		i = -1;
 		res = 0;
 		
-		while (++i < cnt->contr)
+		while (++i < cnt->contr)  // and != 0 the enamy points
 		{
 			if (cnt->cornd[i][2] == -1)
 			{
 				w = cnt->cornd[i][0] - cnt->alpha;
 				z = cnt->cornd[i][1] - cnt->beta;
-				if (data->map[w][z] == -1)
-					ft_putendl_fd("oppeS", data->fdp);
+				if (data->map[w][z] > 0 && z < data->y && data->x > w)
+				{
+					ft_putchar_fd(' ', data->fdp);
+					ft_putnbr_fd(data->map[w][z], data->fdp);
+					res += data->map[w][z];
+					ft_putchar_fd('-', data->fdp);
+					ft_putnbr_fd(res, data->fdp);
+				}
 				else
 				{
-					res += data->map[w][z];
-					// data->map[w][z] = -2;
-					vs(*data);
+					res = 0;
+					break ;
 				}
 			}
 
@@ -143,12 +150,19 @@ void	check(int x, int y, t_cnt *cnt, t_data *data)
 		cnt->cornd[j][0] = t1;
 		cnt->cornd[j][1] = t2;
 		cnt->cornd[j][2] = -1;
-		dprintf(data->fdp, "res = %d\n", res);
-		if (cnt->score > res || cnt->score == 0)
+
+		if ((cnt->score > res || cnt->score == 0) && res > 0)
 		{
+			cnt->zeta = x - t1;
+			cnt->gama = y - t2;
 			data->l = j;
 			cnt->score = res;
 		} // have the score & and the token position
+
 	}
-	dprintf (data->fdp, "\nres = %d | l = %d | score = %d\n", res, data->l, cnt->score);
+	///////////////////////////////////
+	
+	dprintf (data->fdp, "\nzeta = %d | gama = %d | score = %d\n", cnt->zeta, cnt->gama, cnt->score);
+	dprintf (data->fdp, "\nres = %d | l = %d ", res, data->l);
+	
 }

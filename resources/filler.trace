@@ -1,5 +1,7 @@
-seed = 4660
+seed = 2295
 O: error on input
-players/abanlin.filler won
+../zael-mab.filler: Segfault at 40
+X: error on input
+players/superjeannot.filler won
 Score:
-0AGAINST342
+40AGAINST88
