@@ -91,7 +91,6 @@ void    f_heat_map(t_data *data, t_cnt *cnt)
             cnt->ind = cnt->tp;
             if (data->map[x][y] == cnt->ind)
             {
-                // ft_putstr_fd ("\nBfcku\n", data->fdp);
                 louper0(data, cnt, y, x);
                 louper1(data, cnt, y, x);
             }
